@@ -9,40 +9,52 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
 import java.util.Arrays;
 
 @Configuration
 public class SecurityConfig {
-    
+
+    // Singleton Pattern - Spring manages single instance of PasswordEncoder
+    // Only one BCryptPasswordEncoder instance exists throughout the application lifecycle
+    private static final int BCRYPT_STRENGTH = 12;
+
     /**
-     * Password encoder using BCrypt with 12 salt rounds
-     * As per SDD requirement: "Passwords must be hashed using BCrypt with 12 salt rounds"
+     * Singleton PasswordEncoder bean
+     * BCryptPasswordEncoder with 12 salt rounds as per SDD security requirements
+     * Spring guarantees only ONE instance is created and shared across all components
      */
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return new BCryptPasswordEncoder(BCRYPT_STRENGTH);
     }
-    
+
     /**
-     * CORS configuration to allow frontend on localhost:3000 to access backend
+     * Singleton CORS configuration bean
+     * Single shared configuration used across all requests
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:3001"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://10.0.2.2:8080" // Android emulator
+        ));
+        configuration.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
+        ));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-    
+
     /**
-     * Security filter chain with CORS and CSRF disabled for API
+     * Singleton SecurityFilterChain bean
+     * Single filter chain instance handles all HTTP security
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -50,7 +62,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/auth/**").permitAll()
                 .anyRequest().permitAll()
             );
         return http.build();
