@@ -61,7 +61,23 @@ public class AuthController {
      * GET /auth/me (requires Bearer token)
      */
     @GetMapping("/me")
-    public ResponseEntity<String> getCurrentUser() {
-        return ResponseEntity.ok("Authentication endpoint - requires Bearer token");
+    public ResponseEntity<ApiResponse<?>> getCurrentUser() {
+        try {
+            // Get user ID from SecurityContext (set by JwtAuthenticationFilter)
+            Object details = org.springframework.security.core.context.SecurityContextHolder
+                    .getContext().getAuthentication().getDetails();
+            
+            if (details instanceof Long) {
+                Long userId = (Long) details;
+                var userDto = userService.getCurrentUser(userId);
+                return ResponseEntity.ok(ApiResponse.success(userDto));
+            }
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("AUTH-001", "Invalid credentials", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("SYSTEM-001", "Internal server error", e.getMessage()));
+        }
     }
 }

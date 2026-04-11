@@ -18,6 +18,9 @@ public class JwtProvider {
     
     @Value("${jwt.expiration}")
     private long jwtExpiration;
+
+    @Value("${jwt.refresh.expiration:604800000}")
+    private long refreshTokenExpiration;
     
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -41,6 +44,32 @@ public class JwtProvider {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
+
+    public String generateAccessToken(Long userId, String email, String role) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpiration);
+        
+        return Jwts.builder()
+                .setSubject(email)
+                .claim("userId", userId)
+                .claim("role", role)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(Long userId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + refreshTokenExpiration);
+        
+        return Jwts.builder()
+                .setSubject(userId.toString())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
     
     public String getEmailFromToken(String token) {
         Claims claims = getParser()
@@ -48,6 +77,17 @@ public class JwtProvider {
                 .getBody();
         
         return claims.getSubject();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        try {
+            Claims claims = getParser()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get("userId", Long.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     public String getRoleFromToken(String token) {
