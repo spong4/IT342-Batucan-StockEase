@@ -127,6 +127,19 @@ public class UserService {
     }
     
     /**
+     * Get current user by user ID
+     * @param userId User ID from SecurityContext
+     * @return UserDto if found
+     */
+    public UserDto getCurrentUser(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return convertToUserDto(userOptional.get());
+    }
+
+    /**
      * Convert User entity to UserDto (excludes password)
      */
     private UserDto convertToUserDto(User user) {
