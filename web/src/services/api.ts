@@ -3,7 +3,7 @@ import { AuthResponse, LoginRequest, RegisterRequest, ApiResponse } from '../typ
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api/v1';
 
-const apiClient: AxiosInstance = axios.create({
+const api: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -11,7 +11,7 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 // Add token to requests
-apiClient.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -19,10 +19,10 @@ apiClient.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle token refresh on 401
-apiClient.interceptors.response.use(
+// Handle 401 errors
+api.interceptors.response.use(
   (response) => response,
-  async (error) => {
+  (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
@@ -31,6 +31,21 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const authService = {
+  register: (data: RegisterRequest) =>
+    api.post<ApiResponse<AuthResponse>>('/auth/register', data),
+  login: (data: LoginRequest) =>
+    api.post<ApiResponse<AuthResponse>>('/auth/login', data),
+  getCurrentUser: () =>
+    api.get<ApiResponse<any>>('/auth/me'),
+  logout: () => {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  },
+};
+
+export default api;
 
 export const authService = {
   login: (data: LoginRequest) =>
