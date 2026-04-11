@@ -1,9 +1,7 @@
 package edu.cit.batucan.StockEase.controller;
 
-import edu.cit.batucan.StockEase.dto.ApiResponse;
 import edu.cit.batucan.StockEase.dto.LoginRequest;
 import edu.cit.batucan.StockEase.dto.RegisterRequest;
-import edu.cit.batucan.StockEase.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
