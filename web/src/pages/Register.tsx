@@ -9,6 +9,7 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<'OWNER' | 'STAFF'>('OWNER');
+  const [touched, setTouched] = useState({ email: false, password: false });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
@@ -35,7 +36,8 @@ const Register: React.FC = () => {
       await register(email, password, firstname, lastname, role);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Registration failed. Please try again.');
+      const errData = err.response?.data?.error;
+      setError(errData?.details || errData?.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -99,11 +101,14 @@ const Register: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => setTouched(prev => ({ ...prev, email: true }))}
               placeholder="email@example.com"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
-            <p className="text-xs text-red-600 mt-1">Must be valid email format</p>
+            {touched.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && (
+              <p className="text-xs text-red-600 mt-1">Must be valid email format</p>
+            )}
           </div>
 
           {/* Password */}
@@ -113,11 +118,14 @@ const Register: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => setTouched(prev => ({ ...prev, password: true }))}
               placeholder="•••••••"
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
-            <p className="text-xs text-red-600 mt-1">Minimum 8 characters</p>
+            {touched.password && password.length > 0 && password.length < 8 && (
+              <p className="text-xs text-red-600 mt-1">Minimum 8 characters</p>
+            )}
           </div>
 
           {/* Confirm Password */}

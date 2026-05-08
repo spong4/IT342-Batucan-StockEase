@@ -11,9 +11,11 @@ import edu.cit.batucan.StockEase.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@SuppressWarnings("null")
 public class UserService {
     
     @Autowired
@@ -132,7 +134,7 @@ public class UserService {
      * @return UserDto if found
      */
     public UserDto getCurrentUser(Long userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+        Optional<User> userOptional = userRepository.findById(Objects.requireNonNull(userId));
         if (userOptional.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }

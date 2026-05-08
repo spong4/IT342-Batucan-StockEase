@@ -2,7 +2,6 @@ package edu.cit.batucan.StockEase.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ public class ExchangeRateService {
     @Value("${exchange.rate.api.url:https://api.exchangerate-api.com/v4/latest/}")
     private String apiUrl;
 
-    private final RestTemplate restTemplate = new RestTemplate();
     private final Map<String, BigDecimal> rateCache = new HashMap<>();
     private long lastCacheTime = 0;
     private static final long CACHE_DURATION = 30 * 60 * 1000; // 30 minutes

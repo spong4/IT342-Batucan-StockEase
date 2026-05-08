@@ -46,22 +46,3 @@ export const authService = {
 };
 
 export default api;
-
-export const authService = {
-  login: (data: LoginRequest) =>
-    apiClient.post<ApiResponse<AuthResponse>>('/auth/login', data),
-
-  register: (data: RegisterRequest) =>
-    apiClient.post<ApiResponse<AuthResponse>>('/auth/register', data),
-
-  getCurrentUser: () =>
-    apiClient.get('/auth/me'),
-
-  logout: () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    return Promise.resolve();
-  },
-};
-
-export default apiClient;
