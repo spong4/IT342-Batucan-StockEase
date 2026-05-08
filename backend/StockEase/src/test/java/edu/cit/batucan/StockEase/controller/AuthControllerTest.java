@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings("null")
 @TestPropertySource(properties = {
     "jwt.secret=stockease-secret-key-minimum-32-chars-needed-123456789",
     "jwt.expiration=86400000",

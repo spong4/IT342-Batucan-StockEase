@@ -12,7 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
 @Service
+@SuppressWarnings("null")
 public class ProductService {
 
     @Autowired
@@ -32,14 +35,14 @@ public class ProductService {
     }
 
     public ProductDto getProductById(Long id) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findById(Objects.requireNonNull(id))
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         return convertToDto(product);
     }
 
     @Transactional
     public ProductDto createProduct(ProductRequest request, Long userId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(Objects.requireNonNull(userId))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Product product = Product.builder()
@@ -58,7 +61,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto updateProduct(Long id, ProductRequest request, Long userId) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findById(Objects.requireNonNull(id))
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!product.getCreatedBy().getId().equals(userId)) {
@@ -77,7 +80,7 @@ public class ProductService {
 
     @Transactional
     public void deleteProduct(Long id, Long userId) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findById(Objects.requireNonNull(id))
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!product.getCreatedBy().getId().equals(userId)) {
@@ -90,7 +93,7 @@ public class ProductService {
 
     @Transactional
     public ProductDto updateProductImage(Long id, String imageUrl, Long userId) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findById(Objects.requireNonNull(id))
                 .orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
         if (!product.getCreatedBy().getId().equals(userId)) {

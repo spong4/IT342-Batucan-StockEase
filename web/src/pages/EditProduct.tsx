@@ -10,15 +10,6 @@ export const EditProduct: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  if (user?.role !== 'OWNER') {
-    return (
-      <div className="p-8 text-center bg-red-50 min-h-screen">
-        <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
-        <p className="text-gray-600 mt-2">Only owners can edit products.</p>
-      </div>
-    );
-  }
-
   const [product, setProduct] = useState<Product | null>(null);
   const [formData, setFormData] = useState({
     name: '',
@@ -32,8 +23,19 @@ export const EditProduct: React.FC = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
 
   useEffect(() => {
-    fetchProduct();
-  }, [id]);
+    if (user?.role === 'OWNER') {
+      fetchProduct();
+    }
+  }, [id, user]);
+
+  if (user?.role !== 'OWNER') {
+    return (
+      <div className="p-8 text-center bg-red-50 min-h-screen">
+        <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
+        <p className="text-gray-600 mt-2">Only owners can edit products.</p>
+      </div>
+    );
+  }
 
   const fetchProduct = async () => {
     try {

@@ -8,15 +8,6 @@ export const AddProduct: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  if (user?.role !== 'OWNER') {
-    return (
-      <div className="p-8 text-center bg-red-50 min-h-screen">
-        <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
-        <p className="text-gray-600 mt-2">Only owners can add products.</p>
-      </div>
-    );
-  }
-
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -26,6 +17,15 @@ export const AddProduct: React.FC = () => {
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+
+  if (user?.role !== 'OWNER') {
+    return (
+      <div className="p-8 text-center bg-red-50 min-h-screen">
+        <h2 className="text-2xl font-bold text-red-600">Access Denied</h2>
+        <p className="text-gray-600 mt-2">Only owners can add products.</p>
+      </div>
+    );
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

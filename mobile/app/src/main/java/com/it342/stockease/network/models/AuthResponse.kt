@@ -4,12 +4,13 @@ data class AuthResponse(
     val success: Boolean,
     val data: AuthData?,
     val error: ErrorData?,
-    val timestamp: String?
+    val timestamp: Any?
 )
 
 data class AuthData(
     val user: UserData?,
-    val accessToken: String?
+    val accessToken: String?,
+    val refreshToken: String?
 )
 
 data class UserData(

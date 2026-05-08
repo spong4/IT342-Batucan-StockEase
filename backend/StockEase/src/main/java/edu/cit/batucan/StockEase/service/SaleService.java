@@ -20,11 +20,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
+@SuppressWarnings("null")
 public class SaleService {
 
     @Autowired
@@ -47,7 +48,7 @@ public class SaleService {
 
     @Transactional
     public SaleResponse recordSale(SaleRequest request, Long userId) {
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(Objects.requireNonNull(userId))
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         if (request.getItems() == null || request.getItems().isEmpty()) {
@@ -56,7 +57,7 @@ public class SaleService {
 
         // Validate stock availability for all items first
         for (SaleItemRequest itemRequest : request.getItems()) {
-            Product product = productRepository.findById(itemRequest.getProductId())
+            Product product = productRepository.findById(Objects.requireNonNull(itemRequest.getProductId()))
                     .orElseThrow(() -> new IllegalArgumentException("Product not found: " + itemRequest.getProductId()));
 
             if (product.getQuantity() < itemRequest.getQuantity()) {
@@ -79,7 +80,7 @@ public class SaleService {
         sale = saleRepository.save(sale);
 
         for (SaleItemRequest itemRequest : request.getItems()) {
-            Product product = productRepository.findById(itemRequest.getProductId()).get();
+            Product product = productRepository.findById(Objects.requireNonNull(itemRequest.getProductId())).get();
 
             BigDecimal subtotal = product.getPrice().multiply(new BigDecimal(itemRequest.getQuantity()));
             totalAmount = totalAmount.add(subtotal);
@@ -142,7 +143,7 @@ public class SaleService {
     }
 
     public SaleResponse getSaleById(Long saleId) {
-        Sale sale = saleRepository.findById(saleId)
+        Sale sale = saleRepository.findById(Objects.requireNonNull(saleId))
                 .orElseThrow(() -> new IllegalArgumentException("Sale not found"));
         return convertToResponse(sale);
     }
