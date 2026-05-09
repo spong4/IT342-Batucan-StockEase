@@ -42,6 +42,11 @@
       "last 1 safari version"
     ]
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(react-router-dom|react-router)/)/"
+    ]
+  },
   "devDependencies": {
     "autoprefixer": "^10.4.27",
     "axios": "^1.13.6",

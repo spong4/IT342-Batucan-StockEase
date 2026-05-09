@@ -1,0 +1,69 @@
+package edu.cit.batucan.StockEase.feature.auth;
+
+import edu.cit.batucan.StockEase.feature.auth.dto.AuthResponse;
+import edu.cit.batucan.StockEase.feature.auth.dto.LoginRequest;
+import edu.cit.batucan.StockEase.feature.auth.dto.RegisterRequest;
+import edu.cit.batucan.StockEase.shared.dto.ApiResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthController {
+    
+    @Autowired
+    private UserService userService;
+    
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
+        try {
+            AuthResponse authResponse = userService.register(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.success(authResponse));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponse.error("VALID-001", "Validation failed", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("SYSTEM-001", "Internal server error", e.getMessage()));
+        }
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
+        try {
+            AuthResponse authResponse = userService.login(request);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.success(authResponse));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("AUTH-001", "Invalid credentials", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("SYSTEM-001", "Internal server error", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<?>> getCurrentUser() {
+        try {
+            Object details = org.springframework.security.core.context.SecurityContextHolder
+                    .getContext().getAuthentication().getDetails();
+            
+            if (details instanceof Long) {
+                Long userId = (Long) details;
+                var userDto = userService.getCurrentUser(userId);
+                return ResponseEntity.ok(ApiResponse.success(userDto));
+            }
+            
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(ApiResponse.error("AUTH-001", "Invalid credentials", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("SYSTEM-001", "Internal server error", e.getMessage()));
+        }
+    }
+}

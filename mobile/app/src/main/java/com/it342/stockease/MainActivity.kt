@@ -7,9 +7,9 @@ import androidx.compose.runtime.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.it342.stockease.ui.HomeScreen
-import com.it342.stockease.ui.LoginScreen
-import com.it342.stockease.ui.RegisterScreen
+import com.it342.stockease.feature.auth.LoginScreen
+import com.it342.stockease.feature.auth.RegisterScreen
+import com.it342.stockease.feature.home.HomeScreen
 import androidx.compose.material3.MaterialTheme
 
 class MainActivity : ComponentActivity() {

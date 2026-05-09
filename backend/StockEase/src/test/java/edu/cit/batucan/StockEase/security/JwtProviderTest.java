@@ -1,5 +1,6 @@
 package edu.cit.batucan.StockEase.security;
 
+import edu.cit.batucan.StockEase.shared.security.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

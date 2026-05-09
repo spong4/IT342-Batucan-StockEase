@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './features/auth/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import ProtectedRoute from './components/ProtectedRoute';
-import Navbar from './components/Navbar';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Inventory from './pages/Inventory';
-import AddProduct from './pages/AddProduct';
-import EditProduct from './pages/EditProduct';
-import SalesForm from './pages/SalesForm';
-import SalesHistory from './pages/SalesHistory';
-import Profile from './pages/Profile';
+import ProtectedRoute from './shared/components/ProtectedRoute';
+import Navbar from './shared/components/Navbar';
+import Login from './features/auth/LoginPage';
+import Register from './features/auth/RegisterPage';
+import Dashboard from './features/dashboard/DashboardPage';
+import Inventory from './features/product/InventoryPage';
+import AddProduct from './features/product/AddProductPage';
+import EditProduct from './features/product/EditProductPage';
+import SalesForm from './features/sales/SalesFormPage';
+import SalesHistory from './features/sales/SalesHistoryPage';
+import Profile from './features/auth/ProfilePage';
 import './App.css';
 
 function AppContent() {
