@@ -199,7 +199,7 @@
   <rect x="730" y="740" width="200" height="52" rx="8" fill="#FFFFFF" stroke="#16A34A" stroke-width="1.8"/>
   <text x="830" y="762" text-anchor="middle" fill="#16A34A" font-size="12" font-weight="bold">Gmail SMTP</text>
   <text x="830" y="778" text-anchor="middle" fill="#555" font-size="10">Email Notifications</text>
-  <text x="830" y="790" text-anchor="middle" fill="#888" font-size="9">smtp.gmail.com : 587</text>
+  <text x="830" y="790" text-anchor="middle" fill="#888" font-size="9">smtp.gmail.com:587</text>
 
   <!-- Exchange Rate -->
   <rect x="460" y="740" width="210" height="52" rx="8" fill="#FFFFFF" stroke="#16A34A" stroke-width="1.8"/>
@@ -226,7 +226,7 @@
   <rect x="60" y="844" width="680" height="32" rx="10" fill="#DC2626"/>
   <rect x="60" y="862" width="680" height="14" fill="#DC2626"/>
   <text x="400" y="865" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="bold">🐘  PostgreSQL Database (via Supabase)</text>
-  <text x="400" y="879" text-anchor="middle" fill="#FFD0D0" font-size="10">aws-1-ap-south-1.pooler.supabase.com : 5432</text>
+  <text x="400" y="879" text-anchor="middle" fill="#FFD0D0" font-size="10">Supabase Cloud PostgreSQL (AWS ap-south-1) : 5432</text>
 
   <!-- Table labels -->
   <rect x="78"  y="888" width="124" height="90" rx="6" fill="#FEF2F2" stroke="#DC2626" stroke-width="1.2"/>
